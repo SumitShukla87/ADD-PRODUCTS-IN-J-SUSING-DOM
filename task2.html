@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Task 2 of Js</title>
+     <!--   <link rel="stylesheet" type="text/css" href="mystyle.css"> -->
+        <script>
+
+var productList = [];
+
+function editPro(event){
+    var idInput = document.getElementById('t1');
+    var nameInput = document.getElementById('t2');
+    var priceInput = document.getElementById('t3');
+    var button = document.getElementById('button');
+    var td = event.target.parentNode;
+ //   var td = querySelectorAll("#tbody > tr");
+
+
+    td = td.previousSibling;
+    priceInput.value = td.innerHTML;
+    td = td.previousSibling;
+    nameInput.value = td.innerHTML;
+    td = td.previousSibling;
+    idInput.value= td.innerHTML;
+    td.classList.add("editRow");
+    button.innerHTML = "Update";
+
+
+ 
+}
+
+function deletePro(event){
+    var tr = event.target.parentNode.parentNode;
+    var id = parseInt(tr.firstChild.innerHTML);
+    tr.parentNode.removeChild(tr);
+    productList = productList.filter(pro => pro.id == id);
+    console.log(productList);
+}
+
+function checkId(pid) {
+
+    for(var i=0; i<productList.length;i++)
+    {
+        if(productList[i].pid == pid){
+            alert(" Product  ID Already Exist!!!");
+            document.getElementById("t1").focus();
+            return true;
+        }
+    }
+
+}
+
+function addProduct(button){
+
+var pid = document.getElementById('t1').value;
+var pname = document.getElementById('t2').value;
+var pprice = document.getElementById('t3').value;
+var tbodyElement = document.getElementById('tbody');
+var type = document.getElementById('button').innerHTML;
+
+
+
+
+if(type === "Update"){
+    var td = document.querySelector('.editRow');
+    td.classList.remove("editRow");
+    var id = parseInt(td.innerHTML);
+    if(id != pid)
+        if(checkId(pid))
+            return;
+    td.innerHTML = pid;
+    td = td.nextSibling;
+    td.innerHTML = pname;
+    td = td.nextSibling;
+    td.innerHTML = pprice;
+    button.innerHTML = "ADD PRODUCT";
+    productList = productList.map( pi => {
+        if(pi.pid == id)
+           pi.pid = pid ;
+        return pi;
+    });
+    return;
+
+}
+
+if(checkId(pid))
+    return;
+
+var product = {pid,pname,pprice }
+
+
+var tr = document.createElement("tr");
+var td1 = document.createElement("td");
+var td2 = document.createElement("td");
+var td3 = document.createElement("td");
+var td4 = document.createElement("td");
+var editBtn = document.createElement("button");
+var deleteBtn = document.createElement("button");
+
+
+    
+    productList.push(product);
+    document.getElementById("tbody").style.textAlign="center";
+
+    editBtn.innerHTML = "edit"
+    deleteBtn.innerHTML = "delete"
+    editBtn.addEventListener("click", editPro);
+    deleteBtn.addEventListener("click", deletePro);
+
+
+    td1.innerHTML = pid;
+    tr.appendChild(td1);
+    td2.innerHTML = pname;
+    tr.appendChild(td2);
+    td3.innerHTML = pprice;
+    tr.appendChild(td3);
+    td4.appendChild(editBtn);
+    td4.appendChild(deleteBtn);
+    tr.appendChild(td4);
+    tbodyElement.appendChild(tr);
+
+    
+}
+
+
+        </script>
+    </head>
+    <body>
+            <table>
+                <tr>
+                    <td><label for="pid">Product Id</label></td>
+                    <td><input type="text" id="t1"></td>
+                </tr>
+                
+               <tr>
+                   <td><label for="pname">Product Name</label></td>
+                   <td><input type="text" id="t2" ></td>
+               </tr>   
+              
+                <tr>
+                    <td><label for="pprice">Product Price</label></td>
+                    <td><input type="text" id="t3" ></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button id="button" type="button" onclick="addProduct(this)">ADD PRODUCT</button></td>
+                </tr>
+                
+            </table>    
+
+
+
+            <table>
+                <thead>
+                <th>Product Id</th>
+                <th>Product Name</th>
+                <th>Product Price</th>
+                <th>action</th>
+                </thead>
+                <tbody id="tbody">
+                </tbody>
+             </table>
+        
+    </body>
+</html>
